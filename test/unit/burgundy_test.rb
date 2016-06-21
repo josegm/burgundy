@@ -26,6 +26,19 @@ class BurgundyTest < Minitest::Test
     assert_equal [2, 3], items.first.args
   end
 
+  class Obj1; end
+  class Obj2; end
+  class Obj1Presenter < Burgundy::Item; end
+  class Obj2Presenter < Burgundy::Item; end
+
+  test "wraps items with inferring the wrapping class" do
+    items = [ Obj1.new, Obj2.new ]
+
+    collection = Burgundy::Collection.new(items)
+    assert_equal collection.to_ary[0].class.name, 'BurgundyTest::Obj1Presenter'
+    assert_equal collection.to_ary[1].class.name, 'BurgundyTest::Obj2Presenter'
+  end
+
   test "deprecates Burgundy::Item.map" do
     message = "Burgundy::Item.map is deprecated; use Burgundy::Item.wrap instead."
 
